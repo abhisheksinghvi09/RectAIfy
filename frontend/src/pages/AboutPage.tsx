@@ -134,7 +134,7 @@ export default function AboutPage() {
                                 mb: 2,
                             }}
                         >
-                            About RealityCheck
+                            About RectAIfy
                         </Typography>
                         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: '600px', mx: 'auto' }}>
                             AI-powered startup idea validation through comprehensive multi-dimensional analysis

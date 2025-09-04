@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"realitycheck/internal/llm"
-	"realitycheck/pkg/types"
+	"rectaify/internal/llm"
+	"rectaify/pkg/types"
 )
 
 // MarketAnalyzer analyzes market conditions and competition

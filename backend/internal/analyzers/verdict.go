@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"realitycheck/internal/llm"
-	"realitycheck/internal/score"
-	"realitycheck/pkg/types"
+	"rectaify/internal/llm"
+	"rectaify/internal/score"
+	"rectaify/pkg/types"
 )
 
 // VerdictAnalyzer synthesizes all analyses into a final verdict

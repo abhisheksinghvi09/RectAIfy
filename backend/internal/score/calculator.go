@@ -4,7 +4,7 @@ import (
 	"math"
 	"strings"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Calculator computes viability scores based on analysis results

@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"realitycheck/internal/cache"
-	"realitycheck/internal/llm"
-	"realitycheck/pkg/types"
+	"rectaify/internal/cache"
+	"rectaify/internal/llm"
+	"rectaify/pkg/types"
 )
 
 // Executor handles search query execution with caching

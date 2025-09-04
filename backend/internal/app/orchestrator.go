@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"time"
 
-	"realitycheck/internal/analyzers"
-	"realitycheck/internal/evidence"
-	"realitycheck/internal/search"
-	"realitycheck/internal/store"
-	"realitycheck/pkg/types"
+	"rectaify/internal/analyzers"
+	"rectaify/internal/evidence"
+	"rectaify/internal/search"
+	"rectaify/internal/store"
+	"rectaify/pkg/types"
 )
 
 // Orchestrator coordinates the entire analysis workflow

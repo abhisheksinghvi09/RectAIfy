@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Repository handles database operations

@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"realitycheck/internal/app"
-	"realitycheck/internal/report"
-	"realitycheck/pkg/types"
+	"rectaify/internal/app"
+	"rectaify/internal/report"
+	"rectaify/pkg/types"
 )
 
 // APIHandlers contains all HTTP handlers for the API

@@ -9,17 +9,17 @@ import (
 	"syscall"
 	"time"
 
-	"realitycheck/internal/analyzers"
-	"realitycheck/internal/app"
-	"realitycheck/internal/cache"
-	"realitycheck/internal/config"
-	"realitycheck/internal/evidence"
-	"realitycheck/internal/llm"
-	"realitycheck/internal/schema"
-	"realitycheck/internal/score"
-	"realitycheck/internal/search"
-	"realitycheck/internal/store"
-	"realitycheck/pkg/httpx"
+	"rectaify/internal/analyzers"
+	"rectaify/internal/app"
+	"rectaify/internal/cache"
+	"rectaify/internal/config"
+	"rectaify/internal/evidence"
+	"rectaify/internal/llm"
+	"rectaify/internal/schema"
+	"rectaify/internal/score"
+	"rectaify/internal/search"
+	"rectaify/internal/store"
+	"rectaify/pkg/httpx"
 )
 
 func main() {
@@ -101,7 +101,7 @@ func main() {
 
 	// Start server in a goroutine
 	go func() {
-		log.Printf("Starting RealityCheck API server on %s", cfg.HTTPAddr)
+		log.Printf("Starting RectAIfy API server on %s", cfg.HTTPAddr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Server failed to start: %v", err)
 		}

@@ -8,9 +8,9 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"realitycheck/internal/llm"
-	"realitycheck/internal/score"
-	"realitycheck/pkg/types"
+	"rectaify/internal/llm"
+	"rectaify/internal/score"
+	"rectaify/pkg/types"
 )
 
 // Coordinator manages all analyzers and runs them in parallel

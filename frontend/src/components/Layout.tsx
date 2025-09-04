@@ -66,7 +66,7 @@ export default function Layout({ children }: LayoutProps) {
                                 }}
                                 onClick={() => navigate('/')}
                             >
-                                RealityCheck
+                                RectAIfy
                             </Typography>
 
                             <Box sx={{ display: 'flex', gap: 2 }}>

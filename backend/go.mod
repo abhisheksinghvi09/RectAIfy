@@ -1,4 +1,4 @@
-module realitycheck
+module rectaify
 
 go 1.21
 

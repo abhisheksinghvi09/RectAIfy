@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/time/rate"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Client wraps OpenAI API with rate limiting and web search

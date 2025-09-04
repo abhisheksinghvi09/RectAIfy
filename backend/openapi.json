@@ -1,11 +1,11 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "RealityCheck API",
-        "description": "RealityCheck is a comprehensive startup idea validation platform that performs multi-dimensional analysis\nof business ideas using AI-powered research and scoring across market, problem, barriers, execution, \nrisks, and graveyard dimensions.\n\nThe API provides endpoints to submit ideas for analysis, retrieve detailed results in multiple formats,\nand manage analyses with full pagination support.\n",
+        "title": "RectAIfy API",
+        "description": "RectAIfy is a comprehensive startup idea validation platform that performs multi-dimensional analysis\nof business ideas using AI-powered research and scoring across market, problem, barriers, execution, \nrisks, and graveyard dimensions.\n\nThe API provides endpoints to submit ideas for analysis, retrieve detailed results in multiple formats,\nand manage analyses with full pagination support.\n",
         "version": "1.0.0",
         "contact": {
-            "name": "RealityCheck API Support"
+            "name": "RectAIfy API Support"
         },
         "license": {
             "name": "MIT"
@@ -17,7 +17,7 @@
             "description": "Local development server"
         },
         {
-            "url": "https://api.realitycheck.com",
+            "url": "https://api.rectaify.com",
             "description": "Production server"
         }
     ],
@@ -211,7 +211,7 @@
                                     "type": "string",
                                     "description": "Markdown-formatted analysis report"
                                 },
-                                "example": "# Reality Check: TaskAI\n\n**One-liner:** AI-powered task automation\n\n**Analysis Date:** August 25, 2025\n\n## Executive Summary\n\n**Overall Score:** 69.4/100\n\n**Recommendation:** GO: Good viability with some areas requiring attention.\n"
+                                "example": "# RectAify: TaskAI\n\n**One-liner:** AI-powered task automation\n\n**Analysis Date:** August 25, 2025\n\n## Executive Summary\n\n**Overall Score:** 69.4/100\n\n**Recommendation:** GO: Good viability with some areas requiring attention.\n"
                             },
                             "text/html": {
                                 "schema": {

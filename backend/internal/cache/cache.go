@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/sync/singleflight"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Cache provides multi-level caching with LRU + Postgres + singleflight

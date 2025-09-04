@@ -1,4 +1,4 @@
--- RealityCheck Database Schema
+-- RectAIfy Database Schema
 -- PostgreSQL 15+
 
 -- Create the main analyses table

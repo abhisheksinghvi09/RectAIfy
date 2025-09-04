@@ -1,6 +1,6 @@
-# RealityCheck Web Interface
+# RectAIfy Web Interface
 
-A modern, elegant React + MUI web interface for the RealityCheck startup idea validation platform.
+A modern, elegant React + MUI web interface for the RectAIfy startup idea validation platform.
 
 ## 🎨 Design Philosophy
 
@@ -132,7 +132,7 @@ src/
 │   ├── DashboardPage.tsx # Analysis history
 │   └── AboutPage.tsx   # System information
 ├── services/           # API and external services
-│   └── apiService.ts   # RealityCheck API client
+│   └── apiService.ts   # RectAIfy API client
 ├── theme/              # MUI theme configuration
 │   └── theme.ts        # Custom theme with gradients
 ├── types/              # TypeScript definitions
@@ -142,7 +142,7 @@ src/
 
 ## 🌐 API Integration
 
-The interface connects to the RealityCheck API with the following endpoints:
+The interface connects to the RectAIfy API with the following endpoints:
 
 - `POST /v1/analyze` - Submit ideas for analysis
 - `GET /v1/analyses/{id}` - Retrieve analysis results
@@ -184,4 +184,4 @@ Integration points for analytics:
 
 ## 📄 License
 
-This project is part of the RealityCheck platform. See the main project license for details.
+This project is part of the RectAIfy platform. See the main project license for details.

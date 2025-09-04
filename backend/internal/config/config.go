@@ -46,13 +46,13 @@ func Load() *Config {
 
 	return &Config{
 		HTTPAddr:            getEnv("HTTP_ADDR", ":9444"),
-		DatabaseDSN:         expandEnv(getEnv("DB_DSN", "postgres://localhost/realitycheck?sslmode=disable")),
+		DatabaseDSN:         expandEnv(getEnv("DB_DSN", "postgres://localhost/rectaify?sslmode=disable")),
 		OpenAIAPIKey:        getEnv("OPENAI_API_KEY", ""),
 		OpenAIRPS:           getEnvInt("OPENAI_RPS", 2),
 		OpenAIBurst:         getEnvInt("OPENAI_BURST", 4),
 		CacheLRUSize:        getEnvInt("CACHE_LRU_SIZE", 4096),
 		CacheTTL:            getEnvDuration("CACHE_TTL", 24*time.Hour),
-		CacheDir:            getEnv("CACHE_DIR", "/var/lib/realitycheck/cache"),
+		CacheDir:            getEnv("CACHE_DIR", "/var/lib/rectaify/cache"),
 		MaxEvidencePerQuery: getEnvInt("MAX_EVIDENCE_PER_QUERY", 10),
 		MaxQueries:          getEnvInt("MAX_QUERIES", 20),
 		AnalysisTimeout:     getEnvDuration("ANALYSIS_TIMEOUT", 60*time.Second),

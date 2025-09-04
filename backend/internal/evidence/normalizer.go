@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Normalizer handles evidence normalization and deduplication

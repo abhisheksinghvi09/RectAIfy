@@ -10,18 +10,18 @@ import (
 	"path/filepath"
 	"time"
 
-	"realitycheck/internal/analyzers"
-	"realitycheck/internal/app"
-	"realitycheck/internal/cache"
-	"realitycheck/internal/config"
-	"realitycheck/internal/evidence"
-	"realitycheck/internal/llm"
-	"realitycheck/internal/report"
-	"realitycheck/internal/schema"
-	"realitycheck/internal/score"
-	"realitycheck/internal/search"
-	"realitycheck/internal/store"
-	"realitycheck/pkg/types"
+	"rectaify/internal/analyzers"
+	"rectaify/internal/app"
+	"rectaify/internal/cache"
+	"rectaify/internal/config"
+	"rectaify/internal/evidence"
+	"rectaify/internal/llm"
+	"rectaify/internal/report"
+	"rectaify/internal/schema"
+	"rectaify/internal/score"
+	"rectaify/internal/search"
+	"rectaify/internal/store"
+	"rectaify/pkg/types"
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 	)
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "RealityCheck CLI - Startup Idea Analysis Tool\n\n")
+		fmt.Fprintf(os.Stderr, "RectAIfy CLI - Startup Idea Analysis Tool\n\n")
 		fmt.Fprintf(os.Stderr, "Usage: %s [options]\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Options:\n")
 		flag.PrintDefaults()

@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: RealityCheck API
+  title: RectAIfy API
   description: |
-    RealityCheck is a comprehensive startup idea validation platform that performs multi-dimensional analysis
+    RectAIfy is a comprehensive startup idea validation platform that performs multi-dimensional analysis
     of business ideas using AI-powered research and scoring across market, problem, barriers, execution, 
     risks, and graveyard dimensions.
     
@@ -10,14 +10,14 @@ info:
     and manage analyses with full pagination support.
   version: "1.0.0"
   contact:
-    name: RealityCheck API Support
+    name: RectAIfy API Support
   license:
     name: MIT
 
 servers:
   - url: http://localhost:9444
     description: Local development server
-  - url: https://api.realitycheck.com
+  - url: https://api.rectaify.com
     description: Production server
 
 security:
@@ -162,7 +162,7 @@ paths:
                 type: string
                 description: Markdown-formatted analysis report
               example: |
-                # Reality Check: TaskAI
+                # RectAify: TaskAI
                 
                 **One-liner:** AI-powered task automation
                 

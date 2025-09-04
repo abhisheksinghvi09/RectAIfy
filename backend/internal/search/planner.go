@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"realitycheck/pkg/types"
+	"rectaify/pkg/types"
 )
 
 // Planner generates search queries from startup ideas
