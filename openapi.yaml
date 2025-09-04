@@ -1,0 +1,983 @@
+openapi: 3.0.3
+info:
+  title: RealityCheck API
+  description: |
+    RealityCheck is a comprehensive startup idea validation platform that performs multi-dimensional analysis
+    of business ideas using AI-powered research and scoring across market, problem, barriers, execution, 
+    risks, and graveyard dimensions.
+    
+    The API provides endpoints to submit ideas for analysis, retrieve detailed results in multiple formats,
+    and manage analyses with full pagination support.
+  version: "1.0.0"
+  contact:
+    name: RealityCheck API Support
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:9444
+    description: Local development server
+  - url: https://api.realitycheck.com
+    description: Production server
+
+security:
+  - BearerAuth: []
+  - {}
+
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Performs a basic health check of the system including database connectivity
+      operationId: healthCheck
+      tags:
+        - System
+      security: []
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "healthy"
+        '503':
+          description: System is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Health check failed: database connectivity issue"
+
+  /v1/analyze:
+    post:
+      summary: Submit Idea for Analysis
+      description: |
+        Submits a startup idea for comprehensive analysis. The system will perform multi-dimensional
+        research and scoring across market, problem, barriers, execution, risks, and graveyard dimensions.
+        
+        The analysis process includes:
+        - Web research for evidence gathering
+        - AI-powered analysis across all dimensions
+        - Scoring and recommendation generation
+        - Evidence compilation and citation
+      operationId: analyzeIdea
+      tags:
+        - Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisRequest'
+            examples:
+              simple_idea:
+                summary: Simple AI task automation idea
+                value:
+                  idea:
+                    title: "TaskAI"
+                    one_liner: "AI-powered task automation platform for small businesses"
+              detailed_idea:
+                summary: Idea with location and options
+                value:
+                  idea:
+                    title: "EcoDelivery"
+                    one_liner: "Carbon-neutral last-mile delivery service using electric vehicles"
+                    category: "logistics"
+                    location: "San Francisco"
+                  options:
+                    max_evidence: 50
+                    location:
+                      country: "US"
+                      region: "California"
+      responses:
+        '200':
+          description: Analysis started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResponse'
+              example:
+                analysis_id: "f45f1dfd94f2e19c89a4a7c69565f999"
+                status: "completed"
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_fields:
+                  summary: Missing required fields
+                  value:
+                    error: "Title and OneLiner are required"
+                invalid_json:
+                  summary: Invalid JSON format
+                  value:
+                    error: "Invalid JSON"
+        '401':
+          description: Unauthorized - missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error during analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/analyses/{id}:
+    get:
+      summary: Get Analysis Results
+      description: |
+        Retrieves detailed analysis results for a specific analysis ID. Supports multiple output formats:
+        - JSON (default): Complete structured data
+        - Markdown (.md): Human-readable report format
+        - HTML (.html): Formatted web page
+      operationId: getAnalysis
+      tags:
+        - Analysis
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique analysis identifier
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{32}$'
+          example: "f45f1dfd94f2e19c89a4a7c69565f999"
+      responses:
+        '200':
+          description: Analysis results retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+            text/markdown:
+              schema:
+                type: string
+                description: Markdown-formatted analysis report
+              example: |
+                # Reality Check: TaskAI
+                
+                **One-liner:** AI-powered task automation
+                
+                **Analysis Date:** August 25, 2025
+                
+                ## Executive Summary
+                
+                **Overall Score:** 69.4/100
+                
+                **Recommendation:** GO: Good viability with some areas requiring attention.
+            text/html:
+              schema:
+                type: string
+                description: HTML-formatted analysis report
+        '400':
+          description: Invalid analysis ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Analysis not found"
+        '500':
+          description: Failed to retrieve analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/analyses/{id}.md:
+    get:
+      summary: Get Analysis as Markdown
+      description: Retrieves analysis results formatted as a Markdown document
+      operationId: getAnalysisMarkdown
+      tags:
+        - Analysis
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique analysis identifier
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{32}$'
+      responses:
+        '200':
+          description: Markdown analysis report
+          content:
+            text/markdown:
+              schema:
+                type: string
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              example: 'inline; filename="f45f1dfd94f2e19c89a4a7c69565f999.md"'
+        '400':
+          description: Invalid analysis ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/analyses/{id}.html:
+    get:
+      summary: Get Analysis as HTML
+      description: Retrieves analysis results formatted as an HTML document
+      operationId: getAnalysisHTML
+      tags:
+        - Analysis
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique analysis identifier
+          schema:
+            type: string
+            pattern: '^[a-f0-9]{32}$'
+      responses:
+        '200':
+          description: HTML analysis report
+          content:
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Invalid analysis ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/analyses:
+    get:
+      summary: List Analyses
+      description: |
+        Retrieves a paginated list of analyses with optional search functionality.
+        Supports both listing all analyses and searching by query terms.
+      operationId: listAnalyses
+      tags:
+        - Analysis
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of analyses to return (1-100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          example: 20
+        - name: offset
+          in: query
+          description: Number of analyses to skip for pagination (0-based)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          example: 0
+        - name: q
+          in: query
+          description: Search query to filter analyses by title or content
+          schema:
+            type: string
+          example: "AI automation"
+      responses:
+        '200':
+          description: List of analyses with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisListResponse'
+              examples:
+                with_results:
+                  summary: Successful response with analyses
+                  value:
+                    analyses:
+                      - id: "f45f1dfd94f2e19c89a4a7c69565f999"
+                        idea:
+                          title: "TaskAI"
+                          one_liner: "AI-powered task automation"
+                        verdict:
+                          overall_score: 69.4
+                          recommendation: "GO: Good viability with some areas requiring attention."
+                        created_at: "2025-08-25T15:05:23.682594+02:00"
+                        partial: true
+                    pagination:
+                      limit: 10
+                      offset: 0
+                      total: 1
+                empty_results:
+                  summary: No analyses found
+                  value:
+                    analyses: []
+                    pagination:
+                      limit: 10
+                      offset: 0
+                      total: 0
+        '500':
+          description: Failed to retrieve analyses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/stats:
+    get:
+      summary: Get System Statistics
+      description: |
+        Retrieves basic system statistics including total analyses count,
+        configuration parameters, and system health metrics.
+      operationId: getStats
+      tags:
+        - System
+      responses:
+        '200':
+          description: System statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+              example:
+                total_analyses: 42
+                max_evidence: 50
+                timeout: "5m0s"
+        '500':
+          description: Failed to retrieve statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Bearer token authentication. Include the token in the Authorization header:
+        `Authorization: Bearer your-token-here`
+
+  schemas:
+    IdeaInput:
+      type: object
+      required:
+        - title
+        - one_liner
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: The name/title of the startup idea
+          example: "TaskAI"
+        one_liner:
+          type: string
+          minLength: 10
+          maxLength: 500
+          description: Brief description of what the idea does
+          example: "AI-powered task automation platform for small businesses"
+        category:
+          type: string
+          description: Optional category classification
+          example: "SaaS"
+        location:
+          type: string
+          description: Geographic context for the idea
+          example: "San Francisco"
+
+    ApproxLocation:
+      type: object
+      properties:
+        country:
+          type: string
+          description: Country code or name
+          example: "US"
+        region:
+          type: string
+          description: State, province, or region
+          example: "California"
+
+    AnalysisOptions:
+      type: object
+      properties:
+        max_evidence:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Maximum number of evidence pieces to collect
+          example: 50
+        location:
+          $ref: '#/components/schemas/ApproxLocation'
+        timeout:
+          type: string
+          description: Analysis timeout duration (Go duration format)
+          example: "5m"
+
+    AnalysisRequest:
+      type: object
+      required:
+        - idea
+      properties:
+        idea:
+          $ref: '#/components/schemas/IdeaInput'
+        options:
+          $ref: '#/components/schemas/AnalysisOptions'
+
+    AnalysisResponse:
+      type: object
+      required:
+        - analysis_id
+        - status
+      properties:
+        analysis_id:
+          type: string
+          pattern: '^[a-f0-9]{32}$'
+          description: Unique identifier for the analysis
+          example: "f45f1dfd94f2e19c89a4a7c69565f999"
+        status:
+          type: string
+          enum: [completed, failed]
+          description: Status of the analysis
+          example: "completed"
+
+    Evidence:
+      type: object
+      required:
+        - id
+        - url
+        - title
+        - retrieved_at
+      properties:
+        id:
+          type: string
+          description: Unique evidence identifier
+        url:
+          type: string
+          format: uri
+          description: Source URL of the evidence
+          example: "https://techcrunch.com/2024/01/15/ai-automation-startup-raises-10m"
+        title:
+          type: string
+          description: Title of the evidence source
+          example: "AI Automation Startup Raises $10M Series A"
+        snippet:
+          type: string
+          description: Relevant excerpt from the source
+        published_at:
+          type: string
+          format: date-time
+          description: When the source was originally published
+          example: "2024-01-15T10:30:00Z"
+        retrieved_at:
+          type: string
+          format: date-time
+          description: When the evidence was retrieved
+          example: "2025-08-25T13:05:23Z"
+        source_type:
+          type: string
+          description: Type of source (news, database, forum, etc.)
+          example: "news"
+
+    Competitor:
+      type: object
+      required:
+        - name
+        - description
+        - evidence_ids
+      properties:
+        name:
+          type: string
+          description: Competitor company name
+          example: "AutomateNow"
+        description:
+          type: string
+          description: Brief description of the competitor
+          example: "Enterprise task automation platform with 50k+ users"
+        funding:
+          type: string
+          description: Funding information
+          example: "$15M Series A"
+        stage:
+          type: string
+          description: Company stage
+          example: "Growth"
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    Risk:
+      type: object
+      required:
+        - category
+        - description
+        - severity
+        - likelihood
+        - evidence_ids
+      properties:
+        category:
+          type: string
+          description: Risk category
+          example: "Market"
+        description:
+          type: string
+          description: Description of the risk
+          example: "High competition from established players"
+        severity:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Risk severity on 1-5 scale
+          example: 3
+        likelihood:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Risk likelihood on 1-5 scale
+          example: 4
+        mitigation:
+          type: string
+          description: Suggested mitigation strategy
+          example: "Focus on underserved SMB market segment"
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    Barrier:
+      type: object
+      required:
+        - type
+        - description
+        - weight
+        - evidence_ids
+      properties:
+        type:
+          type: string
+          enum: [regulation, supply, distribution, trust, tech]
+          description: Type of barrier
+          example: "tech"
+        description:
+          type: string
+          description: Description of the barrier
+          example: "Complex AI model development required"
+        weight:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Barrier weight/impact (0.0-1.0)
+          example: 0.7
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    GraveyardCase:
+      type: object
+      required:
+        - company_name
+        - description
+        - failure_cause
+        - lessons
+        - evidence_ids
+      properties:
+        company_name:
+          type: string
+          description: Name of failed company
+          example: "TaskBot Inc"
+        description:
+          type: string
+          description: What the company did
+          example: "AI-powered task automation for enterprises"
+        failure_cause:
+          type: string
+          description: Primary reason for failure
+          example: "Poor product-market fit, high customer acquisition cost"
+        lessons:
+          type: string
+          description: Lessons learned from the failure
+          example: "Focus on specific use cases rather than general automation"
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    MarketAnalysis:
+      type: object
+      required:
+        - competitors
+        - market_stage
+        - positioning
+        - evidence_ids
+      properties:
+        competitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Competitor'
+          description: List of identified competitors
+        market_stage:
+          type: string
+          enum: [early, growing, mature, declining]
+          description: Current market maturity stage
+          example: "growing"
+        positioning:
+          type: string
+          description: Recommended market positioning
+          example: "Focus on SMB market with AI-first approach"
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    ProblemAnalysis:
+      type: object
+      required:
+        - pain_points
+        - validation
+        - evidence_ids
+      properties:
+        pain_points:
+          type: array
+          items:
+            type: string
+          description: Identified customer pain points
+          example: ["Manual task management is time-consuming", "Lack of automation tools for small teams"]
+        validation:
+          type: string
+          description: Assessment of problem validation
+          example: "Strong evidence of pain points in target market with growing demand for automation"
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    BarrierAnalysis:
+      type: object
+      required:
+        - barriers
+        - evidence_ids
+      properties:
+        barriers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Barrier'
+          description: Identified execution barriers
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    ExecutionAnalysis:
+      type: object
+      required:
+        - capital_requirement
+        - talent_rarity
+        - integration_count
+        - complexity
+        - evidence_ids
+      properties:
+        capital_requirement:
+          type: string
+          enum: [low, medium, high]
+          description: Required capital level
+          example: "low"
+        talent_rarity:
+          type: string
+          enum: [common, rare, very_rare]
+          description: Required talent availability
+          example: "common"
+        integration_count:
+          type: integer
+          minimum: 0
+          description: Number of required integrations
+          example: 5
+        complexity:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Overall execution complexity score
+          example: 0.3
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    RiskAnalysis:
+      type: object
+      required:
+        - risks
+        - evidence_ids
+      properties:
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Risk'
+          description: Identified business risks
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    GraveyardAnalysis:
+      type: object
+      required:
+        - cases
+        - evidence_ids
+      properties:
+        cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraveyardCase'
+          description: Failed similar companies
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    Viability:
+      type: object
+      required:
+        - overall_score
+        - market_score
+        - problem_score
+        - barrier_score
+        - execution_score
+        - risk_score
+        - graveyard_score
+        - recommendation
+        - key_insights
+        - evidence_ids
+      properties:
+        overall_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall viability score (0-100)
+          example: 69.4
+        market_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Market dimension score
+          example: 65.0
+        problem_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Problem validation score
+          example: 50.0
+        barrier_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Execution barriers score (higher = fewer barriers)
+          example: 85.0
+        execution_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Execution feasibility score
+          example: 82.5
+        risk_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Risk assessment score (higher = lower risk)
+          example: 80.0
+        graveyard_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Lessons from failures score
+          example: 60.0
+        recommendation:
+          type: string
+          description: Final recommendation (GO/NO-GO with reasoning)
+          example: "GO: Good viability with some areas requiring attention."
+        key_insights:
+          type: array
+          items:
+            type: string
+          description: Key insights from the analysis
+          example: ["Clear path to execution with minimal barriers", "Manageable execution complexity"]
+        evidence_ids:
+          type: array
+          items:
+            type: string
+          description: References to supporting evidence
+
+    Analysis:
+      type: object
+      required:
+        - id
+        - idea
+        - market
+        - problem
+        - barriers
+        - execution
+        - risks
+        - graveyard
+        - verdict
+        - evidence
+        - created_at
+      properties:
+        id:
+          type: string
+          pattern: '^[a-f0-9]{32}$'
+          description: Unique analysis identifier
+          example: "f45f1dfd94f2e19c89a4a7c69565f999"
+        idea:
+          $ref: '#/components/schemas/IdeaInput'
+        market:
+          $ref: '#/components/schemas/MarketAnalysis'
+        problem:
+          $ref: '#/components/schemas/ProblemAnalysis'
+        barriers:
+          $ref: '#/components/schemas/BarrierAnalysis'
+        execution:
+          $ref: '#/components/schemas/ExecutionAnalysis'
+        risks:
+          $ref: '#/components/schemas/RiskAnalysis'
+        graveyard:
+          $ref: '#/components/schemas/GraveyardAnalysis'
+        verdict:
+          $ref: '#/components/schemas/Viability'
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evidence'
+          description: All evidence collected during analysis
+        created_at:
+          type: string
+          format: date-time
+          description: When the analysis was created
+          example: "2025-08-25T15:05:23.682594+02:00"
+        partial:
+          type: boolean
+          description: Whether the analysis was incomplete due to timeout/limits
+          example: true
+        meta:
+          type: object
+          description: Raw analyzer outputs and validation metadata
+          additionalProperties: true
+
+    AnalysisListResponse:
+      type: object
+      required:
+        - analyses
+        - pagination
+      properties:
+        analyses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Analysis'
+          description: List of analyses
+        pagination:
+          type: object
+          required:
+            - limit
+            - offset
+            - total
+          properties:
+            limit:
+              type: integer
+              description: Maximum number of results per page
+              example: 10
+            offset:
+              type: integer
+              description: Number of results skipped
+              example: 0
+            total:
+              type: integer
+              description: Total number of analyses
+              example: 42
+
+    StatsResponse:
+      type: object
+      required:
+        - total_analyses
+        - max_evidence
+        - timeout
+      properties:
+        total_analyses:
+          type: integer
+          description: Total number of analyses in the system
+          example: 42
+        max_evidence:
+          type: integer
+          description: Maximum evidence pieces collected per analysis
+          example: 50
+        timeout:
+          type: string
+          description: Analysis timeout duration
+          example: "5m0s"
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          description: Overall system health status
+          example: "healthy"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+          example: "Analysis not found"
+        code:
+          type: string
+          description: Machine-readable error code
+          example: "NOT_FOUND"
+        details:
+          type: string
+          description: Additional error details
+          example: "Analysis with ID f45f1dfd94f2e19c89a4a7c69565f999 does not exist"
+
+tags:
+  - name: Analysis
+    description: Operations for startup idea analysis
+  - name: System
+    description: System health and statistics
